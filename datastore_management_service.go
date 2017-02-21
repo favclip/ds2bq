@@ -140,6 +140,11 @@ func (s *datastoreManagementService) HandlePostTQ(c context.Context, req *Noop) 
 }
 
 func (s *datastoreManagementService) HandlePostDeleteList(c context.Context, r *http.Request, req *ReqListBase) (*Noop, error) {
+	if s.ExpireAfter <= 0 {
+		// to do nothing
+		return &Noop{}, nil
+	}
+
 	store := &AEDatastoreStore{}
 
 	list, listRespBase, err := store.ListAEBackupInformation(c, req)
