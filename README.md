@@ -37,7 +37,7 @@ You can change it with your favorite settings.
 
 ```
 $ SERVICE_ACCOUNT_NAME=gcs-objectchangenotification
-$ API_ID=foobar
+$ APP_ID=foobar
 $ BACKUP_BUCKET=foobar-datastore-backups
 $ API_ENDPOINT=https://foobar.appspot.com/api/gcs/object-change-notification
 $ echo ${SERVICE_ACCOUNT_NAME} ${APP_ID} ${BACKUP_BUCKET} ${API_ENDPOINT}
