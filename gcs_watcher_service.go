@@ -137,11 +137,10 @@ func GCSWatcherWithAfterContext(f func(c context.Context) (GCSWatcherOption, err
 	}
 }
 
-// gcsWatcherService はGCSからのObject Change Notificationを受取処理する
 type gcsWatcherService struct {
 	QueueName             string
 	BackupBucketName      string
-	ImportTargetKinds     []interface{} // goonを利用してImportTargetKindNamesに変換される
+	ImportTargetKinds     []interface{} // convert to ImportTargetKindNames using goon.
 	ImportTargetKindNames []string
 	DatasetID             string
 

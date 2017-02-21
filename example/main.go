@@ -3,6 +3,7 @@ package example
 import (
 	"net/http"
 	"time"
+
 	"github.com/favclip/ds2bq"
 	"github.com/favclip/ucon"
 	"github.com/favclip/ucon/swagger"
