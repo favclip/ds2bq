@@ -23,7 +23,7 @@ func init() {
 	swPlugin := swagger.NewPlugin(&swagger.Options{
 		Object: &swagger.Object{
 			Info: &swagger.Info{
-				Title:   "dstimesexample",
+				Title:   "ds2bqexample",
 				Version: "1",
 			},
 		},
@@ -31,34 +31,34 @@ func init() {
 	ucon.Plugin(swPlugin)
 
 	{
-		s := dstimes.NewDatastoreManagementService(
-			dstimes.ManagementWithURLs(
+		s := ds2bq.NewDatastoreManagementService(
+			ds2bq.ManagementWithURLs(
 				"/api/datastore-management/delete-old-backups",
 				"/tq/datastore-management/delete-old-backups",
 				"/tq/datastore-management/delete-backup",
 			),
-			dstimes.ManagementWithQueueName("exec-rm-old-datastore-backups"),
-			dstimes.ManagementWithExpireDuration(30*24*time.Hour),
+			ds2bq.ManagementWithQueueName("exec-rm-old-datastore-backups"),
+			ds2bq.ManagementWithExpireDuration(30*24*time.Hour),
 		)
 		s.SetupWithUconSwagger(swPlugin)
 	}
 	{
-		s, err := dstimes.NewGCSWatcherService(
-			dstimes.GCSWatcherWithURLs(
+		s, err := ds2bq.NewGCSWatcherService(
+			ds2bq.GCSWatcherWithURLs(
 				"/api/gcs/object-change-notification",
 				"/tq/gcs/object-to-bq",
 			),
-			dstimes.GCSWatcherWithBackupBucketName("dstimesexample"),
+			ds2bq.GCSWatcherWithBackupBucketName("ds2bqexample"),
 			// or
-			dstimes.GCSWatcherWithAfterContext(func(c context.Context) (dstimes.GCSWatcherOption, error) {
+			ds2bq.GCSWatcherWithAfterContext(func(c context.Context) (ds2bq.GCSWatcherOption, error) {
 				bucketName := appengine.AppID(c) + "-datastore-backups"
-				return dstimes.GCSWatcherWithBackupBucketName(bucketName), nil
+				return ds2bq.GCSWatcherWithBackupBucketName(bucketName), nil
 			}),
-			dstimes.GCSWatcherWithDatasetID("datastore_imports"),
-			dstimes.GCSWatcherWithQueueName("datastore-to-bq"),
-			dstimes.GCSWatcherWithTargetKindNames("Article", "User"),
+			ds2bq.GCSWatcherWithDatasetID("datastore_imports"),
+			ds2bq.GCSWatcherWithQueueName("datastore-to-bq"),
+			ds2bq.GCSWatcherWithTargetKindNames("Article", "User"),
 			// or
-			dstimes.GCSWatcherWithTargetKinds(&Article{}, &User{}),
+			ds2bq.GCSWatcherWithTargetKinds(&Article{}, &User{}),
 		)
 		if err != nil {
 			panic(err)

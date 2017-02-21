@@ -1,4 +1,4 @@
-package dstimes
+package ds2bq
 
 import (
 	"github.com/favclip/ucon"

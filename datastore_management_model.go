@@ -1,4 +1,4 @@
-package dstimes
+package ds2bq
 
 import (
 	"encoding/json"

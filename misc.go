@@ -1,6 +1,6 @@
 //go:generate qbg -output model_query.go -private .
 
-package dstimes
+package ds2bq
 
 import (
 	"errors"
