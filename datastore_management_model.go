@@ -39,6 +39,7 @@ type AEBackupInformation struct {
 	// This kind does not have ParentKey rarely. maybe it comes from restore with backup of other app created.
 	ParentKey     *datastore.Key `json:"-" datastore:"-" goon:"parent"` // AEDatastoreAdminOperation
 	ID            int64          `datastore:"-" goon:"id"`
+	ActiveJobs    []string       `datastore:"active_jobs"`
 	CompleteTime  time.Time      `datastore:"complete_time"`
 	CompletedJobs []string       `datastore:"completed_jobs"`
 	Destination   string         `datastore:"destination"` // This field is string type maybe.
