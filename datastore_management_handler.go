@@ -22,7 +22,7 @@ func DecodeReqListBase(r io.Reader) (*ReqListBase, error) {
 	return req, nil
 }
 
-// DecodeAEBackupInformationDeleteReq decodes a  AEBackupInformationDeleteReq from r.
+// DecodeAEBackupInformationDeleteReq decodes a AEBackupInformationDeleteReq from r.
 func DecodeAEBackupInformationDeleteReq(r io.Reader) (*AEBackupInformationDeleteReq, error) {
 	decoder := json.NewDecoder(r)
 	var req *AEBackupInformationDeleteReq

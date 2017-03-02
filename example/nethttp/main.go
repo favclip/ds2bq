@@ -16,14 +16,14 @@ const (
 )
 
 func init() {
-	// Datastore backup
+	// Datastore backup management
 	queueName := "exec-rm-old-datastore-backups"
 	expireAfter := 24 * time.Hour * 30
 	http.HandleFunc(apiDeleteBackup, ds2bq.DeleteOldBackupAPIHandlerFunc(queueName, tqDeleteOldBackup))
 	http.HandleFunc(tqDeleteOldBackup, ds2bq.DeleteOldBackupTaskHandlerFunc(queueName, tqDeleteBackup, expireAfter))
 	http.HandleFunc(tqDeleteBackup, ds2bq.DeleteBackupTaskHandlerFunc(queueName))
 
-	// GCS to BigQuery
+	// import GCS to BigQuery
 	queueName = "datastore-to-bq"
 	bucketName := "ds2bqexample-nethttp"
 	datasetID := "datastore_imports"
