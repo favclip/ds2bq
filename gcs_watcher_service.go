@@ -1,7 +1,6 @@
 package ds2bq
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -15,7 +14,6 @@ import (
 	"google.golang.org/api/bigquery/v2"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/taskqueue"
 	"google.golang.org/appengine/urlfetch"
 )
 
@@ -220,20 +218,21 @@ func (s *gcsWatcherService) processWithContext(c context.Context) error {
 	return nil
 }
 
+func (s *gcsWatcherService) convertKind(c context.Context) {
+	if len(s.ImportTargetKindNames) > 0 || len(s.ImportTargetKinds) == 0 {
+		return
+	}
+
+	g := goon.FromContext(c)
+	for _, target := range s.ImportTargetKinds {
+		s.ImportTargetKindNames = append(s.ImportTargetKindNames, g.Kind(target))
+	}
+}
+
 func (s *gcsWatcherService) HandleOCN(c context.Context, r *http.Request, obj *GCSObject) error {
 	if err := s.processWithContext(c); err != nil {
 		return err
 	}
-
-	// see https://cloud.google.com/storage/docs/object-change-notification
-
-	channelID := r.Header.Get("X-Goog-Channel-Id")
-	clientToken := r.Header.Get("X-Goog-Channel-Token")
-	resourceID := r.Header.Get("X-Goog-Resource-Id")
-	resourceState := r.Header.Get("X-Goog-Resource-State")
-	resourceURI := r.Header.Get("X-Goog-Resource-Uri")
-
-	log.Infof(c, "channelID: %s, clientToken: %s, resourceID: %s, resourceState: %s, resourceURI: %s", channelID, clientToken, resourceID, resourceState, resourceURI)
 
 	for k, v := range r.Header {
 		log.Infof(c, "Header %s: %s", k, v)
@@ -241,65 +240,12 @@ func (s *gcsWatcherService) HandleOCN(c context.Context, r *http.Request, obj *G
 
 	log.Infof(c, "payload: %#v", obj)
 
-	if s.BackupBucketName != "" && obj.Bucket != s.BackupBucketName {
-		log.Infof(c, "%s is unexpected bucket", obj.Bucket)
+	s.convertKind(c)
+	if !obj.IsImportTarget(c, r, s.BackupBucketName, s.ImportTargetKindNames) {
 		return nil
 	}
 
-	if resourceState != "exists" {
-		log.Infof(c, "%s is unexpected state", resourceState)
-		return nil
-	}
-
-	kindName := s.extractKindName(obj.Name)
-	if kindName == "" {
-		log.Infof(c, "This is not backup file")
-		return nil
-	}
-
-	g := goon.FromContext(c)
-
-	if len(s.ImportTargetKindNames) == 0 && len(s.ImportTargetKinds) != 0 {
-		for _, target := range s.ImportTargetKinds {
-			s.ImportTargetKindNames = append(s.ImportTargetKindNames, g.Kind(target))
-		}
-	}
-
-	found := false
-	for _, targetName := range s.ImportTargetKindNames {
-		if targetName == kindName {
-			found = true
-		}
-	}
-
-	if !found {
-		log.Infof(c, "%s is not required kind", kindName)
-		return nil
-	}
-
-	log.Infof(c, "%s should imports", obj.Name)
-
-	jsonReq := &GCSObjectToBQJobReq{
-		Bucket:      obj.Bucket,
-		FilePath:    obj.Name,
-		KindName:    kindName,
-		TimeCreated: obj.TimeCreated,
-	}
-	b, err := json.MarshalIndent(jsonReq, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	h := make(http.Header)
-	h.Set("Content-Type", "application/json")
-	task := &taskqueue.Task{
-		Path:    s.GCSObjectToBQJobURL,
-		Payload: b,
-		Header:  h,
-		Method:  "POST",
-	}
-
-	_, err = taskqueue.Add(c, task, s.QueueName)
+	err := receiveOCN(c, obj, s.QueueName, s.GCSObjectToBQJobURL)
 	if err != nil {
 		return err
 	}
