@@ -1,8 +1,9 @@
 package ds2bq
 
 import (
+	"context"
+
 	"github.com/favclip/ucon"
-	"golang.org/x/net/context"
 	"google.golang.org/appengine"
 )
 
