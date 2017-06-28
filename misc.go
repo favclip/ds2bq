@@ -3,10 +3,10 @@
 package ds2bq
 
 import (
+	"context"
 	"errors"
 
 	"github.com/mjibson/goon"
-	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 )

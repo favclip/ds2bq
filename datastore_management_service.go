@@ -1,6 +1,7 @@
 package ds2bq
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -10,7 +11,6 @@ import (
 	"github.com/favclip/ucon"
 	"github.com/favclip/ucon/swagger"
 	"github.com/mjibson/goon"
-	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/taskqueue"

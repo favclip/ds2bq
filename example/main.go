@@ -1,13 +1,13 @@
 package example
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	"github.com/favclip/ds2bq"
 	"github.com/favclip/ucon"
 	"github.com/favclip/ucon/swagger"
-	"golang.org/x/net/context"
 	"google.golang.org/appengine"
 )
 

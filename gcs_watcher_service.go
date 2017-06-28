@@ -1,6 +1,7 @@
 package ds2bq
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/favclip/ucon"
 	"github.com/mjibson/goon"
-	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/bigquery/v2"
