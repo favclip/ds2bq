@@ -2,17 +2,11 @@ package ds2bq
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"net/url"
-	"strconv"
 	"time"
 
 	"github.com/favclip/ucon"
 	"github.com/favclip/ucon/swagger"
-	"github.com/mjibson/goon"
-	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/taskqueue"
 )
 
@@ -140,65 +134,9 @@ func (s *datastoreManagementService) HandlePostTQ(c context.Context, req *Noop) 
 }
 
 func (s *datastoreManagementService) HandlePostDeleteList(c context.Context, r *http.Request, req *ReqListBase) (*Noop, error) {
-	if s.ExpireAfter <= 0 {
-		// to do nothing
-		return &Noop{}, nil
-	}
-
-	store := &AEDatastoreStore{}
-
-	list, listRespBase, err := store.ListAEBackupInformation(c, req)
+	err := addDeleteOldBackupTasks(c, r, req, s.QueueName, s.DeleteUnitOfBackupURL, s.ExpireAfter)
 	if err != nil {
 		return nil, err
-	}
-	g := goon.FromContext(c)
-
-	if len(list) == 0 {
-		return &Noop{}, nil
-	}
-
-	expireThreshold := time.Now().Add(-1 * s.ExpireAfter)
-	for _, backupInfo := range list {
-		key := g.Key(backupInfo)
-		if backupInfo.CompleteTime.Before(expireThreshold) {
-			log.Infof(c, "%s shoud be removed, %#v", key.String(), backupInfo)
-
-			reqURL, err := url.Parse(s.DeleteUnitOfBackupURL)
-			if err != nil {
-				return nil, err
-			}
-			vs := url.Values{}
-			vs.Add("key", key.Encode())
-			reqURL.RawQuery = vs.Encode()
-			t := &taskqueue.Task{
-				Method: "DELETE",
-				Path:   reqURL.String(),
-			}
-			_, err = taskqueue.Add(c, t, s.QueueName)
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	if listRespBase.Cursor != "" {
-		reqURL, err := url.Parse(s.DeleteOldBackupURL)
-		if err != nil {
-			return nil, err
-		}
-		vs := url.Values{}
-		vs.Add("limit", strconv.Itoa(req.Limit))
-		vs.Add("offset", strconv.Itoa(req.Offset))
-		vs.Add("cursor", listRespBase.Cursor)
-		reqURL.RawQuery = vs.Encode()
-		t := &taskqueue.Task{
-			Method: "DELETE",
-			Path:   reqURL.String(),
-		}
-		_, err = taskqueue.Add(c, t, s.QueueName)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return &Noop{}, nil
@@ -210,25 +148,7 @@ type AEBackupInformationDeleteReq struct {
 }
 
 func (s *datastoreManagementService) HandleDeleteAEBackupInformation(c context.Context, r *http.Request, req *AEBackupInformationDeleteReq) (*Noop, error) {
-	if name := r.Header.Get("X-AppEngine-QueueName"); name != s.QueueName {
-		t := &taskqueue.Task{
-			Method: "DELETE",
-			Path:   r.URL.String(),
-		}
-		_, err := taskqueue.Add(c, t, s.QueueName)
-		if err != nil {
-			return nil, err
-		}
-		return &Noop{}, nil
-	}
-
-	key, err := datastore.DecodeKey(req.Key)
-	if err != nil {
-		return nil, fmt.Errorf("decode key error: %s", err.Error())
-	}
-
-	store := &AEDatastoreStore{}
-	err = store.DeleteAEBackupInformationAndRelatedData(c, key)
+	err := deleteBackup(c, r, req, s.QueueName)
 	if err != nil {
 		return nil, err
 	}

@@ -1,0 +1,7 @@
+queue:
+- name: exec-rm-old-datastore-backups
+  rate: 10/s
+  bucket_size: 10
+- name: datastore-to-bq
+  rate: 10/s
+  bucket_size: 10

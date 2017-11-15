@@ -1,4 +1,4 @@
-//go:generate qbg -output model_query.go -private .
+//go:generate qbg -output model_query.go -private -inlineinterfaces .
 
 package ds2bq
 
