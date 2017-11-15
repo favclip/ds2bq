@@ -364,8 +364,18 @@ func (s *gcsWatcherService) HandleBackupToBQJob(c context.Context, req *GCSObjec
 	return nil
 }
 
-// extractKindName from agtzfnN0Zy1jaGFvc3JACxIcX0FFX0RhdGFzdG9yZUFkbWluX09wZXJhdGlvbhjx52oMCxIWX0FFX0JhY2t1cF9JbmZvcm1hdGlvbhgBDA.Article.backup_info like ID value.
 func (s *gcsWatcherService) extractKindName(id string) string {
+	if id := s.extractKindNameForDatastoreAdmin(id); len(id) > 0 {
+		return id
+	}
+	if id := s.extractKindNameForDatastoreExport(id); len(id) > 0 {
+		return id
+	}
+	return ""
+}
+
+// extractKindName from agtzfnN0Zy1jaGFvc3JACxIcX0FFX0RhdGFzdG9yZUFkbWluX09wZXJhdGlvbhjx52oMCxIWX0FFX0JhY2t1cF9JbmZvcm1hdGlvbhgBDA.Article.backup_info like ID value.
+func (s *gcsWatcherService) extractKindNameForDatastoreAdmin(id string) string {
 	if v := strings.LastIndex(id, "/"); v != -1 {
 		id = id[v:]
 	}
@@ -377,4 +387,22 @@ func (s *gcsWatcherService) extractKindName(id string) string {
 		return ""
 	}
 	return vs[1]
+}
+
+// extractKindName from 2017-11-14T06:47:01_23208/all_namespaces/kind_Item/all_namespaces_kind_Item.export_metadata like ID value.
+func (s *gcsWatcherService) extractKindNameForDatastoreExport(id string) string {
+	if v := strings.LastIndex(id, "."); v != -1 {
+		if id[v:] != ".export_metadata" {
+			return ""
+		}
+	}
+
+	if v := strings.LastIndex(id, "/"); v != -1 {
+		id = id[:v]
+	}
+	if v := strings.LastIndex(id, "/"); v != -1 {
+		id = id[v:]
+	}
+
+	return id[len("/kind_"):]
 }
