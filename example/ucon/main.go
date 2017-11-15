@@ -48,7 +48,7 @@ func init() {
 				"/api/gcs/object-change-notification",
 				"/tq/gcs/object-to-bq",
 			),
-			ds2bq.GCSWatcherWithBackupBucketName("ds2bqexample"),
+			ds2bq.GCSWatcherWithBackupBucketName("ds2bqexample-ucon"),
 			// or
 			ds2bq.GCSWatcherWithAfterContext(func(c context.Context) (ds2bq.GCSWatcherOption, error) {
 				bucketName := appengine.AppID(c) + "-datastore-backups"

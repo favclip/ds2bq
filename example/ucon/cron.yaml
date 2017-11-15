@@ -1,0 +1,5 @@
+cron:
+- description: daily datastore backup cleanup
+  url: /tq/datastore-management/delete-old-backups
+  schedule: every day 05:00
+  timezone: Asia/Tokyo
