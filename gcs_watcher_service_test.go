@@ -78,36 +78,3 @@ func TestGCSWatcherService_Post(t *testing.T) {
 		t.Fatalf("unexpected %d, expected 200", w.Code)
 	}
 }
-
-func TestGCSWatcherService_extractKindName(t *testing.T) {
-	s := gcsWatcherService{}
-
-	{
-		kind := s.extractKindName("agtzfnN0Zy1jaGFvc3JACxIcX0FFX0RhdGFzdG9yZUFkbWluX09wZXJhdGlvbhjx52oMCxIWX0FFX0JhY2t1cF9JbmZvcm1hdGlvbhgBDA.Article.backup_info")
-		if e, g := "Article", kind; e != g {
-			t.Fatalf("expected kind %s; got %s", e, g)
-		}
-	}
-	{
-		kind := s.extractKindName("2017-11-14T06:47:01_23208/all_namespaces/kind_Item/all_namespaces_kind_Item.export_metadata")
-		if e, g := "Item", kind; e != g {
-			t.Fatalf("expected kind %s; got %s", e, g)
-		}
-	}
-}
-
-func TestGCSWatcherService_extractKindNameForDatastoreAdmin(t *testing.T) {
-	s := gcsWatcherService{}
-	kind := s.extractKindNameForDatastoreAdmin("agtzfnN0Zy1jaGFvc3JACxIcX0FFX0RhdGFzdG9yZUFkbWluX09wZXJhdGlvbhjx52oMCxIWX0FFX0JhY2t1cF9JbmZvcm1hdGlvbhgBDA.Article.backup_info")
-	if e, g := "Article", kind; e != g {
-		t.Fatalf("expected kind %s; got %s", e, g)
-	}
-}
-
-func TestGCSWatcherService_extractKindNameForDatastoreExport(t *testing.T) {
-	s := gcsWatcherService{}
-	kind := s.extractKindNameForDatastoreExport("2017-11-14T06:47:01_23208/all_namespaces/kind_Item/all_namespaces_kind_Item.export_metadata")
-	if e, g := "Item", kind; e != g {
-		t.Fatalf("expected kind %s; got %s", e, g)
-	}
-}
