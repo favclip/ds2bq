@@ -49,7 +49,7 @@ func ReceiveOCNHandleFunc(bucketName, queueName, path string, kindNames []string
 			return
 		}
 
-		err = receiveOCN(c, obj, queueName, path)
+		err = ReceiveOCN(c, obj, queueName, path)
 		if err != nil {
 			log.Errorf(c, "ds2bq: failed to receive OCN: %s", err)
 			return

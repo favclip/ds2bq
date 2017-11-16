@@ -18,11 +18,21 @@ import (
 
 // ExtractKindName extracts kind name from the object name.
 func (obj *GCSObject) ExtractKindName() string {
-	id := obj.Name
-	if v := strings.LastIndex(id, "/"); v != -1 {
-		id = id[v:]
+	if id := obj.extractKindNameForDatastoreAdmin(obj.Name); len(id) > 0 {
+		return id
 	}
-	vs := strings.Split(id, ".")
+	if id := obj.extractKindNameForDatastoreExport(obj.Name); len(id) > 0 {
+		return id
+	}
+	return ""
+}
+
+// extractKindName from agtzfnN0Zy1jaGFvc3JACxIcX0FFX0RhdGFzdG9yZUFkbWluX09wZXJhdGlvbhjx52oMCxIWX0FFX0JhY2t1cF9JbmZvcm1hdGlvbhgBDA.Article.backup_info like ID value.
+func (obj *GCSObject) extractKindNameForDatastoreAdmin(name string) string {
+	if v := strings.LastIndex(name, "/"); v != -1 {
+		name = name[v:]
+	}
+	vs := strings.Split(name, ".")
 	if len(vs) != 3 {
 		return ""
 	}
@@ -30,6 +40,24 @@ func (obj *GCSObject) ExtractKindName() string {
 		return ""
 	}
 	return vs[1]
+}
+
+// extractKindName from 2017-11-14T06:47:01_23208/all_namespaces/kind_Item/all_namespaces_kind_Item.export_metadata like ID value.
+func (obj *GCSObject) extractKindNameForDatastoreExport(name string) string {
+	if v := strings.LastIndex(name, "."); v != -1 {
+		if name[v:] != ".export_metadata" {
+			return ""
+		}
+	}
+
+	if v := strings.LastIndex(name, "/"); v != -1 {
+		name = name[:v]
+	}
+	if v := strings.LastIndex(name, "/"); v != -1 {
+		name = name[v:]
+	}
+
+	return name[len("/kind_"):]
 }
 
 // IsRequiredKind reports whether the GCSObject is related required kind.
@@ -97,7 +125,8 @@ func NewGCSHeader(r *http.Request) *GCSHeader {
 	}
 }
 
-func receiveOCN(c context.Context, obj *GCSObject, queueName, path string) error {
+// ReceiveOCN is Process payload of Object Change Notification
+func ReceiveOCN(c context.Context, obj *GCSObject, queueName, path string) error {
 	req := obj.ToBQJobReq()
 	b, err := json.MarshalIndent(req, "", "  ")
 	if err != nil {
