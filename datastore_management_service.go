@@ -110,9 +110,8 @@ func NewDatastoreManagementService(opts ...ManagementOption) DatastoreManagement
 // SetupWithUconSwagger setup handlers to ucon mux.
 func (s *datastoreManagementService) SetupWithUconSwagger(swPlugin *swagger.Plugin) {
 	tag := swPlugin.AddTag(&swagger.Tag{Name: "DatastoreManagement", Description: ""})
-	var info *swagger.HandlerInfo
 
-	info = swagger.NewHandlerInfo(s.HandlePostTQ)
+	info := swagger.NewHandlerInfo(s.HandlePostTQ)
 	ucon.Handle("DELETE", s.APIDeleteBackupsURL, info)
 	info.Description, info.Tags = "Remove old Datastore backups", []string{tag.Name}
 

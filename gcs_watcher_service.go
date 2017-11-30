@@ -244,12 +244,7 @@ func (s *gcsWatcherService) HandleOCN(c context.Context, r *http.Request, obj *G
 		return nil
 	}
 
-	err := ReceiveOCN(c, obj, s.QueueName, s.GCSObjectToBQJobURL)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return ReceiveOCN(c, obj, s.QueueName, s.GCSObjectToBQJobURL)
 }
 
 // GCSObjectToBQJobReq means request of OCN to BQ.

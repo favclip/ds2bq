@@ -95,10 +95,12 @@ func newAEDatastoreAdminOperationQueryBuilderWithKind(kind string) *aeDatastoreA
 		bldr: bldr,
 		name: "status_info",
 	}
+
 	if plugger, ok := interface{}(bldr).(Plugger); ok {
 		bldr.plugin = plugger.Plugin()
 		bldr.plugin.Init("AEDatastoreAdminOperation")
 	}
+
 	return bldr
 }
 
@@ -318,10 +320,12 @@ func newAEBackupInformationQueryBuilderWithKind(kind string) *aeBackupInformatio
 		bldr: bldr,
 		name: "start_time",
 	}
+
 	if plugger, ok := interface{}(bldr).(Plugger); ok {
 		bldr.plugin = plugger.Plugin()
 		bldr.plugin.Init("AEBackupInformation")
 	}
+
 	return bldr
 }
 
@@ -496,10 +500,12 @@ func newAEBackupInformationKindFilesQueryBuilderWithKind(kind string) *aeBackupI
 		bldr: bldr,
 		name: "files",
 	}
+
 	if plugger, ok := interface{}(bldr).(Plugger); ok {
 		bldr.plugin = plugger.Plugin()
 		bldr.plugin.Init("AEBackupInformationKindFiles")
 	}
+
 	return bldr
 }
 
@@ -669,10 +675,12 @@ func newAEBackupKindQueryBuilderWithKind(kind string) *aeBackupKindQueryBuilder 
 		bldr: bldr,
 		name: "__key__",
 	}
+
 	if plugger, ok := interface{}(bldr).(Plugger); ok {
 		bldr.plugin = plugger.Plugin()
 		bldr.plugin.Init("AEBackupKind")
 	}
+
 	return bldr
 }
 
@@ -852,10 +860,12 @@ func newAEBackupInformationKindTypeInfoQueryBuilderWithKind(kind string) *aeBack
 		bldr: bldr,
 		name: "is_partial",
 	}
+
 	if plugger, ok := interface{}(bldr).(Plugger); ok {
 		bldr.plugin = plugger.Plugin()
 		bldr.plugin.Init("AEBackupInformationKindTypeInfo")
 	}
+
 	return bldr
 }
 

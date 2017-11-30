@@ -89,9 +89,5 @@ func deleteBackup(c context.Context, r *http.Request, req *AEBackupInformationDe
 	}
 
 	store := &AEDatastoreStore{}
-	err = store.DeleteAEBackupInformationAndRelatedData(c, key)
-	if err != nil {
-		return err
-	}
-	return nil
+	return store.DeleteAEBackupInformationAndRelatedData(c, key)
 }

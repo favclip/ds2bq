@@ -11,6 +11,7 @@ import (
 	"google.golang.org/appengine"
 )
 
+// UseAppengineContext replace context to appengine's context.
 func UseAppengineContext(b *ucon.Bubble) error {
 	b.Context = appengine.NewContext(b.R)
 	return b.Next()
@@ -70,5 +71,8 @@ func init() {
 	http.Handle("/", ucon.DefaultMux)
 }
 
+// Article represents Article kind.
 type Article struct{}
+
+// User represents User kind.
 type User struct{}

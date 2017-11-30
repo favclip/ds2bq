@@ -213,12 +213,7 @@ func (store *AEDatastoreStore) DeleteAEBackupInformationAndRelatedData(c context
 		log.Infof(c, "remove target key: %s", key.String())
 	}
 
-	err = g.DeleteMulti(keys)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return g.DeleteMulti(keys)
 }
 
 // FetchChildren gathering children and fills fields.
@@ -345,7 +340,6 @@ func (entity *AEBackupInformationKindTypeInfo) FetchChildren(c context.Context) 
 // AEDatastoreAdminOperationListLoader implements QueryListLoader.
 type AEDatastoreAdminOperationListLoader struct {
 	List     []*AEDatastoreAdminOperation
-	cursor   datastore.Cursor
 	Req      ReqListBase
 	RespList *RespListBase
 }
@@ -394,7 +388,6 @@ func (ldr *AEDatastoreAdminOperationListLoader) RespListBase() *RespListBase {
 // AEBackupInformationListLoader implements QueryListLoader.
 type AEBackupInformationListLoader struct {
 	List     []*AEBackupInformation
-	cursor   datastore.Cursor
 	Req      ReqListBase
 	RespList *RespListBase
 }

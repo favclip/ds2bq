@@ -143,11 +143,7 @@ func ReceiveOCN(c context.Context, obj *GCSObject, queueName, path string) error
 	}
 
 	_, err = taskqueue.Add(c, t, queueName)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func insertImportJob(c context.Context, req *GCSObjectToBQJobReq, datasetID string) error {
