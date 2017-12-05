@@ -1,6 +1,8 @@
 package ds2bq
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestGCSObject_ExtractKindName(t *testing.T) {
 	{
@@ -33,8 +35,19 @@ func TestGCSObject_extractKindNameForDatastoreAdmin(t *testing.T) {
 
 func TestGCSObject_extractKindNameForDatastoreExport(t *testing.T) {
 	o := GCSObject{}
-	kind := o.extractKindNameForDatastoreExport("2017-11-14T06:47:01_23208/all_namespaces/kind_Item/all_namespaces_kind_Item.export_metadata")
-	if e, g := "Item", kind; e != g {
-		t.Fatalf("expected kind %s; got %s", e, g)
+
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{input: "2017-11-14T06:47:01_23208/all_namespaces/kind_Item/all_namespaces_kind_Item.export_metadata", want: "Item"},
+		{input: "2017-11-14T06:47:01_23208/2017-11-30T08:22:02_14720.overall_export_metadata", want: ""},
+		{input: "2017-11-14T06:47:01_23208/all_namespaces/kind_Item/output-95", want: ""},
+	}
+
+	for _, test := range tests {
+		if e, g := test.want, o.extractKindNameForDatastoreExport(test.input); e != g {
+			t.Fatalf("expected kind %s; got %s", e, g)
+		}
 	}
 }
