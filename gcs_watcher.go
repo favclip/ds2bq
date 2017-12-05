@@ -48,6 +48,8 @@ func (obj *GCSObject) extractKindNameForDatastoreExport(name string) string {
 		if name[v:] != ".export_metadata" {
 			return ""
 		}
+	} else {
+		return ""
 	}
 
 	if v := strings.LastIndex(name, "/"); v != -1 {
