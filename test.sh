@@ -5,7 +5,7 @@ packages=$(go list ./...)
 
 # Apply tools
 export PATH=$(pwd)/build-cmd:$PATH
-which goimports golint staticcheck gosimple unused
+which goimports golint staticcheck gosimple unused qbg
 go generate $packages
 goimports -w $targets
 go tool vet $targets
