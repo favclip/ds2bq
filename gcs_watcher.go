@@ -49,6 +49,7 @@ func (obj *GCSObject) extractKindNameForDatastoreExport(name string) string {
 			return ""
 		}
 	} else {
+		// The expected value is the value of ".export_metadata" at the end, so exclude if there is no.
 		return ""
 	}
 
