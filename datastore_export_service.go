@@ -2,16 +2,13 @@ package ds2bq
 
 import (
 	"context"
-	"time"
-
-	"google.golang.org/appengine"
 
 	"golang.org/x/oauth2/google"
-
-	"github.com/pkg/errors"
-
-	datastore "google.golang.org/api/datastore/v1beta1"
+	dsapi "google.golang.org/api/datastore/v1beta1"
+	"google.golang.org/appengine"
 )
+
+// https://cloud.google.com/datastore/docs/export-import-entities
 
 // EntityFilter is Entity condition to export
 type EntityFilter struct {
@@ -23,7 +20,7 @@ type EntityFilter struct {
 
 // DatastoreExportService serves DatastoreExport API Function.
 type DatastoreExportService interface {
-	Export(c context.Context, outputGCSPrefix string, entityFilter *EntityFilter) (*datastore.GoogleLongrunningOperation, error)
+	Export(c context.Context, outputGCSPrefix string, entityFilter *EntityFilter) (*dsapi.GoogleLongrunningOperation, error)
 }
 
 // NewDatastoreExportService returns ready to use DatastoreExportService
@@ -33,34 +30,25 @@ func NewDatastoreExportService() DatastoreExportService {
 
 type datastoreExportService struct{}
 
-func (s *datastoreExportService) Export(c context.Context, outputGCSPrefix string, entityFilter *EntityFilter) (*datastore.GoogleLongrunningOperation, error) {
-	ctxWithDeadline, cancel := context.WithTimeout(c, 9*time.Minute)
-	defer cancel()
-	client, err := google.DefaultClient(ctxWithDeadline, datastore.DatastoreScope)
+func (s *datastoreExportService) Export(c context.Context, outputGCSPrefix string, entityFilter *EntityFilter) (*dsapi.GoogleLongrunningOperation, error) {
+	client, err := google.DefaultClient(c, dsapi.DatastoreScope)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed google.DefaultClient")
+		return nil, err
 	}
 
-	service, err := datastore.New(client)
+	service, err := dsapi.New(client)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed datastore.New")
+		return nil, err
 	}
 
-	ef := &datastore.GoogleDatastoreAdminV1beta1EntityFilter{
-		Kinds:           entityFilter.Kinds,
-		NamespaceIds:    entityFilter.NamespaceIds,
-		ForceSendFields: entityFilter.ForceSendFields,
-		NullFields:      entityFilter.NullFields,
-	}
-
-	p := appengine.AppID(c)
-	op, err := service.Projects.Export(p, &datastore.GoogleDatastoreAdminV1beta1ExportEntitiesRequest{
-		EntityFilter:    ef,
+	eCall := service.Projects.Export(appengine.AppID(c), &dsapi.GoogleDatastoreAdminV1beta1ExportEntitiesRequest{
+		EntityFilter: &dsapi.GoogleDatastoreAdminV1beta1EntityFilter{
+			Kinds:           entityFilter.Kinds,
+			NamespaceIds:    entityFilter.NamespaceIds,
+			ForceSendFields: entityFilter.ForceSendFields,
+			NullFields:      entityFilter.NullFields,
+		},
 		OutputUrlPrefix: outputGCSPrefix,
-	}).Do()
-	if err != nil {
-		return nil, errors.Wrap(err, "datastore.Projects.Export")
-	}
-
-	return op, nil
+	})
+	return eCall.Do()
 }
