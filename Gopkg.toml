@@ -18,7 +18,7 @@ required = [
 
 [[constraint]]
   name = "github.com/favclip/ucon"
-  version = "1.0.0"
+  version = "2.0.0"
 
 [[constraint]]
   branch = "master"

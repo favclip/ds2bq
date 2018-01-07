@@ -4,26 +4,20 @@
 [[projects]]
   name = "cloud.google.com/go"
   packages = ["compute/metadata"]
-  revision = "2d3a6656c17a60b0815b7e06ab0be04eacb6e613"
-  version = "v0.16.0"
+  revision = "050b16d2314d5fc3d4c9a51e4cd5c7468e77f162"
+  version = "v0.17.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/favclip/genbase"
   packages = ["."]
-  revision = "9308343633095f1e30c2e879e8a7af64f15273d0"
+  revision = "33e3f4f43761221e7ef1f0be35bad3711ae26cbd"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/favclip/golidator"
   packages = ["."]
   revision = "f8a22a68c32005c88762ff41a4139950b49263a9"
   version = "v2.0.1"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/favclip/jwg"
-  packages = ["."]
-  revision = "2e0a6f4873bb5e8b5a6d13b6c1adbeec1a033d19"
 
 [[projects]]
   name = "github.com/favclip/qbg"
@@ -39,15 +33,21 @@
 
 [[projects]]
   name = "github.com/favclip/ucon"
-  packages = [".","swagger"]
-  revision = "b423b286da50624062596296322e78c743924b0e"
-  version = "v1.0.0"
+  packages = [
+    ".",
+    "swagger"
+  ]
+  revision = "ccb694c2d08eb1e9d120a7b262b13ffc15bafb42"
+  version = "v2.0.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/golang/lint"
-  packages = [".","golint"]
-  revision = "6aaf7c34af0f4c36a57e0c429bace4d706d8e931"
+  packages = [
+    ".",
+    "golint"
+  ]
+  revision = "e14d9b0f1d332b1420c1ffa32562ad2dc84d645d"
 
 [[projects]]
   branch = "master"
@@ -58,7 +58,10 @@
 [[projects]]
   branch = "master"
   name = "github.com/kisielk/gotool"
-  packages = [".","internal/load"]
+  packages = [
+    ".",
+    "internal/load"
+  ]
   revision = "d6ce6262d87e3a4e153e86023ff56ae771554a41"
 
 [[projects]]
@@ -70,42 +73,104 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["context","context/ctxhttp"]
-  revision = "a8b9294777976932365dabb6640cf1468d95c70f"
+  packages = [
+    "context",
+    "context/ctxhttp"
+  ]
+  revision = "42fe2e1c20de1054d3d30f82cc9fb5b41e2e3767"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/oauth2"
-  packages = [".","google","internal","jws","jwt"]
-  revision = "f95fa95eaa936d9d87489b15d1d18b97c1ba9c28"
+  packages = [
+    ".",
+    "google",
+    "internal",
+    "jws",
+    "jwt"
+  ]
+  revision = "30785a2c434e431ef7c507b54617d6a951d5f2b4"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/tools"
-  packages = ["cmd/goimports","go/ast/astutil","go/buildutil","go/gcexportdata","go/gcimporter15","go/loader","go/types/typeutil","imports"]
-  revision = "36c7af3342056179a831c19ec142f2763b310f7b"
+  packages = [
+    "cmd/goimports",
+    "go/ast/astutil",
+    "go/buildutil",
+    "go/gcexportdata",
+    "go/gcimporter15",
+    "go/loader",
+    "go/types/typeutil",
+    "imports"
+  ]
+  revision = "8cab8a1319f0be9798e7fe78b15da75e5f94b2e9"
 
 [[projects]]
   branch = "master"
   name = "google.golang.org/api"
-  packages = ["bigquery/v2","gensupport","googleapi","googleapi/internal/uritemplates"]
-  revision = "88d8826ad7655f8bdc7328b1ec3774f3851c3a44"
+  packages = [
+    "bigquery/v2",
+    "datastore/v1beta1",
+    "gensupport",
+    "googleapi",
+    "googleapi/internal/uritemplates"
+  ]
+  revision = "b1c0f9b3aa8fac163224fab909402d49c6dce50a"
 
 [[projects]]
   branch = "master"
   name = "google.golang.org/appengine"
-  packages = [".","aetest","datastore","internal","internal/app_identity","internal/base","internal/datastore","internal/log","internal/memcache","internal/modules","internal/remote_api","internal/taskqueue","internal/urlfetch","internal/user","log","memcache","taskqueue","urlfetch","user"]
-  revision = "9d8544a6b2c7df9cff240fcf92d7b2f59bc13416"
+  packages = [
+    ".",
+    "aetest",
+    "datastore",
+    "internal",
+    "internal/app_identity",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/memcache",
+    "internal/modules",
+    "internal/remote_api",
+    "internal/taskqueue",
+    "internal/urlfetch",
+    "internal/user",
+    "log",
+    "memcache",
+    "taskqueue",
+    "urlfetch",
+    "user"
+  ]
+  revision = "5bee14b453b4c71be47ec1781b0fa61c2ea182db"
 
 [[projects]]
   name = "honnef.co/go/tools"
-  packages = ["callgraph","callgraph/static","cmd/gosimple","cmd/staticcheck","cmd/unused","deprecated","functions","internal/sharedcheck","lint","lint/lintutil","simple","ssa","ssa/ssautil","staticcheck","staticcheck/vrp","unused","version"]
+  packages = [
+    "callgraph",
+    "callgraph/static",
+    "cmd/gosimple",
+    "cmd/staticcheck",
+    "cmd/unused",
+    "deprecated",
+    "functions",
+    "internal/sharedcheck",
+    "lint",
+    "lint/lintutil",
+    "simple",
+    "ssa",
+    "ssa/ssautil",
+    "staticcheck",
+    "staticcheck/vrp",
+    "unused",
+    "version"
+  ]
   revision = "444f7b0ef8e620c384da646182663eb4f0f14ffe"
   version = "2017.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0d23bdf4529dad1d19dcae3622b43441ff6a4e48180ddb2f43b636bc5e14b785"
+  inputs-digest = "47fec02888ac2d672331f691c4ffaa2d89de8f6d146f4d7bdf5b3c4a687c0c8d"
   solver-name = "gps-cdcl"
   solver-version = 1
